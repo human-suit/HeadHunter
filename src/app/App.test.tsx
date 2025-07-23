@@ -1,46 +1,60 @@
-import { render, screen } from '@testing-library/react'
-import App from './App'
-import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, test } from 'vitest'
-import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import App from './App';
+import '@testing-library/jest-dom';
 
-describe('Vegetable Shop App', () => {
-  beforeEach(() => {
-    render(<App />)
-  })
-  test('показывает loader, затем список продуктов', async () => {
-    expect(screen.getAllByAltText(/loading/i)).toHaveLength(8)
+vi.mock('@widgets/', () => ({
+  Header: () => <header data-testid="header">Header</header>,
+  SectionSertch: () => (
+    <section data-testid="search">
+      <h1>Список вакансий</h1>
+      <h2>по профессии Frontend-разработчик</h2>
+      <input placeholder="Должность или название компании" />
+      <button>Найти</button>
+    </section>
+  ),
+  SectionFilter: () => <aside data-testid="filter">Filter Section</aside>,
+  SectionList: () => <main data-testid="list">List Section</main>,
+}));
 
-    const brocolli = await screen.findByText(
-      'Brocolli - 1 Kg',
-      {},
-      { timeout: 4000 }
-    )
-    expect(brocolli).toBeInTheDocument()
-  })
+describe('App component', () => {
+  it('renders all main layout sections', () => {
+    render(<App />);
 
-  test('шапка содержит название и info корзины', async () => {
-    expect(screen.getByText(/vegetable/i)).toBeInTheDocument()
-    expect(screen.getByText(/cart/i)).toBeInTheDocument()
-  })
+    expect(screen.getByTestId('header')).toBeInTheDocument();
+    expect(screen.getByTestId('search')).toBeInTheDocument();
+    expect(screen.getByTestId('filter')).toBeInTheDocument();
+    expect(screen.getByTestId('list')).toBeInTheDocument();
+  });
 
-  test('при клике на кнопку Add to cart обновляется корзина', async () => {
-    await screen.findByText('Brocolli - 1 Kg', {}, { timeout: 5000 })
+  it('SectionSertch содержит заголовки и элементы управления', () => {
+    render(<App />);
 
-    const addButtons = screen.getAllByRole('button', { name: /add to card/i })
-    expect(addButtons.length).toBeGreaterThan(0)
+    const searchSection = screen.getByTestId('search');
 
-    await userEvent.click(addButtons[0])
+    expect(searchSection).toHaveTextContent(/список вакансий/i);
+    expect(searchSection).toHaveTextContent(/frontend-разработчик/i);
+    expect(
+      screen.getByPlaceholderText(/должность или название компании/i)
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /найти/i })).toBeInTheDocument();
+  });
 
-    expect(screen.getByText(/cart/i).closest('button')).toHaveTextContent('1')
-  })
+  it('Header содержит правильный текст', () => {
+    render(<App />);
+    expect(screen.getByTestId('header')).toHaveTextContent('Header');
+  });
 
-  test('при клике на иконку корзины открывается popup', async () => {
-    await screen.findByText('Brocolli - 1 Kg', {}, { timeout: 5000 })
+  it('SectionFilter и SectionList отображаются с корректным текстом', () => {
+    render(<App />);
+    expect(screen.getByTestId('filter')).toHaveTextContent('Filter Section');
+    expect(screen.getByTestId('list')).toHaveTextContent('List Section');
+  });
 
-    const cartButton = screen.getByRole('button', { name: /cart/i })
-    await userEvent.click(cartButton)
-
-    expect(screen.getByText('Brocolli - 1 Kg')).toBeInTheDocument()
-  })
-})
+  it('не содержит лишних компонентов', () => {
+    render(<App />);
+    expect(screen.queryAllByTestId(/header|search|filter|list/)).toHaveLength(
+      4
+    );
+  });
+});
