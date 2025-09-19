@@ -1,3 +1,5 @@
+https://human-suit.github.io/HeadHunter
+
 # React + TypeScript + Vite
 <img width="1874" height="975" alt="image" src="https://github.com/user-attachments/assets/58d56b16-c022-4e8d-afb9-e63378a5a1e4" />
 
