@@ -10,7 +10,13 @@ export default function SectionList() {
 
   useEffect(() => {
     if (list.length === 0) {
-      dispatch(fetchVacancies({ city: '', skills: [], text: '96' }));
+      dispatch(
+        fetchVacancies({
+          city: '',
+          skills: ['TypeScript', 'React', 'Redux'],
+          text: '96',
+        })
+      );
     }
   }, [dispatch, list.length]);
 

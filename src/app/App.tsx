@@ -1,6 +1,11 @@
 import style from './styles/index.module.scss';
 
-import { Header, SectionFilter, SectionList, SectionSertch } from '@widgets/';
+import {
+  Header,
+  SectionFilter,
+  SectionList,
+  SectionSertch,
+} from '@widgets/index';
 
 function App() {
   return (

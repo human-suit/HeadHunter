@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 type FiltersState = {
   city: string;
@@ -8,7 +8,7 @@ type FiltersState = {
 
 const initialState: FiltersState = {
   city: '',
-  skills: [],
+  skills: ['TypeScript', 'React', 'Redux'],
   searchText: '',
 };
 

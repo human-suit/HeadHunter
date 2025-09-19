@@ -1,11 +1,11 @@
 import style from './index.module.scss';
 import { locateIcon, WhitePlus } from '@shared/assets/';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '@/hooks/useReduxHooks';
 import { useState } from 'react';
 import { addSkill, removeSkill, setCity } from '@/features/modal/filtersSlice';
-import { RootState } from '@/app/store';
+import type { RootState } from '@/app/store';
 import { fetchVacancies } from '@/features/modal/modalSlice';
+import { useAppDispatch } from '@/hooks/useReduxHooks';
 
 export default function SectionFilter() {
   const dispatch = useAppDispatch();
@@ -32,6 +32,10 @@ export default function SectionFilter() {
     dispatch(setCity(e));
     dispatch(fetchVacancies({ city: e, skills, text: searchText.trim() }));
   };
+  const reternBut = (skill: string) => {
+    dispatch(removeSkill(skill));
+    dispatch(fetchVacancies({ city, skills, text: searchText.trim() }));
+  };
 
   return (
     <div className={style.sectionFilter}>
@@ -57,7 +61,7 @@ export default function SectionFilter() {
           {skills.map((skill) => (
             <span key={skill}>
               <p>{skill}</p>
-              <button onClick={() => dispatch(removeSkill(skill))}>✕</button>
+              <button onClick={() => reternBut(skill)}>✕</button>
             </span>
           ))}
         </div>
